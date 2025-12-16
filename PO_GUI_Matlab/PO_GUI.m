@@ -4,7 +4,7 @@
 % Requirement : MATLAB Symbolic Math Toolbox
 % Developer   : Dr. Kosuke Ohgo
 % ULR         : https://github.com/ohgo1977/ProductOperator_GUI_MATLAB
-% Version     : 1.0.0
+% Version     : 1.1.0
 %
 % Please read the manual (PO_GUI_Matlab_Manual.pdf) for details.
 %
@@ -33,12 +33,17 @@
 % SOFTWARE.
 %
 % Revision Information
+% Version 1.1.0
+% December 16, 2025
+% - 'All Spins' button was added to the Chemical Shift Frame.
+%
 % Version 1.0.0
 % December 15, 2025
+% - Initial Submission
 
 function PO_GUI
     % Version
-    ver_str = 'version 1.0.0';
+    ver_str = 'version 1.1.0';
     fprintf('PO_GUI %s\n', ver_str);
 
     % === USER INPUT ===
@@ -145,20 +150,25 @@ function PO_GUI
         fig.UserData.CS{end+1} = ['o' SpinLabel{k} '*t'];
     end
 
-    uilabel(fig.UserData.CSPanel,'Text','Angle','Position',[10 150 60 20]);
-    y = 120;
+    y = 140;
+    uilabel(fig.UserData.CSPanel,'Text','Angle','Position',[10 y+30 60 20]);
     for k = 1:length(fig.UserData.CS)
         uibutton(fig.UserData.CSPanel,'Text',fig.UserData.CS{k},'Position',[10+70*(k-1) y 60 30],...
             'ButtonPushedFcn',@(btn,event) set(fig.UserData.CS_var,'Value',btn.Text));
     end
     fig.UserData.CS_var = uieditfield(fig.UserData.CSPanel,'text','Position',[10+70*k y 80 30],'Value','q');
 
-    uilabel(fig.UserData.CSPanel,'Text','Apply CS to','Position',[10 60 120 20]);
-    y = 20;
+    y = 60;
+    uilabel(fig.UserData.CSPanel,'Text','Apply CS to','Position',[10 y+40 120 20]);
     for k = 1:length(SpinLabel)
         uibutton(fig.UserData.CSPanel,'Text',SpinLabel{k},'Position',[10+120*(k-1) y 100 30],...
             'ButtonPushedFcn',@click_CS);
     end
+
+    uibutton(fig.UserData.CSPanel,'Text','All Spins','Position',[10 y-40 100 30],...
+    'ButtonPushedFcn',@click_CS_all);
+    fig.UserData.CS_t_var = uieditfield(fig.UserData.CSPanel,'text','Position',[10+120 y-40 100 30],'Value','t');
+    uilabel(fig.UserData.CSPanel,'Text','(Time constant for ''All Spins'')','Position',[10+240 y-40 240 20]);
 
     % ===============================================
     %      J-COUPLING SECTION
